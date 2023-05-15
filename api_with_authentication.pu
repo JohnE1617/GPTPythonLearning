@@ -1,0 +1,32 @@
+#Imagine you have an API endpoint that requires authentication using a token. 
+#Write a Python function that takes a token as input and makes a GET request 
+#to "https://api.example.com/data" with the token included in the request header.
+#The function should handle authentication errors and return the response from the server.
+
+#!/usr/env python3
+
+import requests
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('auth_token', type=str, help='Authorization token for API endpoint', nargs='?', default='guest_token')
+args = parser.parse_args()
+
+token = args.auth_token
+
+def auth_request(url, token):
+    headers = {
+        'Authorization': token
+    }
+    response = requests.get(url,headers=headers)
+    return response
+
+url = "https://api.example.com/data"
+response = auth_request(url, token)
+try:
+    if response.status_code == 200:
+        print('Authorization Successful')
+    else:
+        print('Unauthorized, please check token')
+except requests.exceptions.RequestException as e:
+    print(f'Error has occured during the request: {e}')
